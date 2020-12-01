@@ -2,10 +2,18 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
+
+	_ "github.com/go-sql-driver/mysql" // adding sql driver support
 )
 
+// StartConn ...
 func StartConn() *sql.DB {
-	db, err := sql.Open("mysql", "root:password@/autos")
+	usuario := "root"
+	pass := ""
+	host := "tcp(127.0.0.1:3306)"
+	nombreBaseDeDatos := "autos"
+	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@%s/%s", usuario, pass, host, nombreBaseDeDatos))
 	if err != nil {
 		panic(err.Error())
 	}
@@ -42,7 +50,7 @@ func createSchemaIfNotExists(db *sql.DB) {
 	);`
 
 	// execute a query on the server
-	_, err = db.Exec(schemaAuto)
+	var _, err = db.Exec(schemaAuto)
 	if err != nil {
 		panic(err.Error())
 	}

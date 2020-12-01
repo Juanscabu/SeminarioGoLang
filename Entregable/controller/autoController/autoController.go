@@ -1,4 +1,4 @@
-package autocontroller
+package autoController
 
 import (
 	"database/sql"
@@ -12,10 +12,12 @@ import (
 
 var serviceAuto autoService.ServiceAuto
 
+// Start ...
 func Start(db *sql.DB) {
 	serviceAuto, _ = autoService.New(db)
 }
 
+// SaveAutoHandler ...
 func SaveAutoHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -26,7 +28,8 @@ func SaveAutoHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func FindByIdAutoHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
+// FindByIDAutoHandler ...
+func FindByIDAutoHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
 	w.Header().Set("Content-Type", "application/json")
 	param := params["id"]
 	id, err := strconv.Atoi(param)
@@ -46,11 +49,13 @@ func FindByIdAutoHandler(w http.ResponseWriter, r *http.Request, params map[stri
 	json.NewEncoder(w).Encode(a)
 }
 
+// FindAllAutoHandler ...
 func FindAllAutoHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(serviceAuto.FindAll())
 }
 
+// UpdateAutoHandler ...
 func UpdateAutoHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
 	w.Header().Set("Content-Type", "application/json")
 	param := params["id"]
@@ -81,7 +86,8 @@ func UpdateAutoHandler(w http.ResponseWriter, r *http.Request, params map[string
 
 }
 
-func RemoveAutotHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
+// RemoveAutoHandler ...
+func RemoveAutoHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
 	param := params["id"]
 	id, err := strconv.Atoi(param)
 	itsID := err == nil

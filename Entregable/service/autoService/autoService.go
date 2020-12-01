@@ -1,4 +1,4 @@
-package autoservice
+package autoService
 
 import (
 	"database/sql"
@@ -28,13 +28,13 @@ func New(db *sql.DB) (ServiceAuto, error) {
 }
 
 func (s service) Save(a entity.Auto) (entity.Auto, error) {
-	query := "INSERT INTO auto(modelo,marca,patente,id_concesionaria) VALUES (?,?,?,?)"
+	query := "INSERT INTO auto(modelo,marca,patente) VALUES (?,?,?)"
 	prepare, err := s.db.Prepare(query)
 	if err != nil {
 		panic(err.Error())
 	}
 
-	row, err := prepare.Exec(a.Modelo, a.Marca, a.Patente, a.IdConsesionaria)
+	row, err := prepare.Exec(a.Modelo, a.Marca, a.Patente)
 
 	if err != nil {
 		panic(err.Error())
@@ -58,13 +58,12 @@ func (s service) FindByID(ID int) (entity.Auto, error) {
 	var modelo string
 	var marca string
 	var patente string
-	var IDConsesionaria int64
-	err2 := rows.Scan(&id, &modelo, &marca, &patente, &IDConsesionaria)
+	err2 := rows.Scan(&id, &modelo, &marca, &patente)
 
 	if err2 != nil {
 		return auto, err
 	} else {
-		auto = entity.Auto{ID: id, Modelo: modelo, Marca: marca, Patente: patente, IDConsesionaria: IDConsesionaria}
+		auto = entity.Auto{ID: id, Modelo: modelo, Marca: marca, Patente: patente}
 
 	}
 
@@ -82,13 +81,12 @@ func (s service) FindAll() []entity.Auto {
 			var modelo string
 			var marca string
 			var patente string
-			var IDConsesionaria int64
-			err2 := rows.Scan(&id, &modelo, &marca, &patente, &IDConsesionaria)
+			err2 := rows.Scan(&id, &modelo, &marca, &patente)
 
 			if err2 != nil {
 				return nil
 			} else {
-				auto := entity.Auto{ID: id, Modelo: modelo, Marca: marca, Patente: patente, IDConsesionaria: IDConsesionaria}
+				auto := entity.Auto{ID: id, Modelo: modelo, Marca: marca, Patente: patente}
 				autos = append(autos, auto)
 			}
 		}
@@ -115,6 +113,6 @@ func (s service) Remove(ID int) error {
 }
 
 func (s service) Update(a entity.Auto) (entity.Auto, error) {
-	_, err := s.db.Exec("UPDATE Auto SET modelo = ?, marca = ?, patente = ?, id_concesionaria = ? WHERE id_auto = ?", a.Modelo, a.Marca, a.Patente, a.IdConsesionaria, a.ID)
+	_, err := s.db.Exec("UPDATE Auto SET modelo = ?, marca = ?, patente = ? WHERE id_auto = ?", a.Modelo, a.Marca, a.Patente, a.ID)
 	return a, err
 }
