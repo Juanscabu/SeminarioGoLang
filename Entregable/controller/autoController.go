@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/Juanscabu/SeminarioGoLang/Entregable/entity"
-	"github.com/Juanscabu/SeminarioGoLang/Entregable/service/autoService"
 )
 
 var serviceAuto autoService.ServiceAuto

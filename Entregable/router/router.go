@@ -3,7 +3,6 @@ package router
 import (
 	"net/http"
 
-	"github.com/Juanscabu/SeminarioGoLang/Entregable/controller/autoController"
 	"github.com/dimfeld/httptreemux/v5"
 )
 
