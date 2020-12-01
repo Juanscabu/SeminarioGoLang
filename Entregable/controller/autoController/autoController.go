@@ -7,8 +7,10 @@ import (
 	"strconv"
 
 	"github.com/Juanscabu/SeminarioGoLang/Entregable/entity"
+	autoService "github.com/Juanscabu/SeminarioGoLang/Entregable/service/autoService"
 )
 
+var serviceAgencia agenciaService.ServiceAgencia
 var serviceAuto autoService.ServiceAuto
 
 // Start ...
@@ -17,7 +19,7 @@ func Start(db *sql.DB) {
 }
 
 // SaveAutoHandler ...
-func SaveAutoHandler(w http.ResponseWriter, r *http.Request) {
+func SaveAutoHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var a entity.Auto
@@ -49,9 +51,29 @@ func FindByIDAutoHandler(w http.ResponseWriter, r *http.Request, params map[stri
 }
 
 // FindAllAutoHandler ...
-func FindAllAutoHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
+func FindAllAutosHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(serviceAuto.FindAll())
+}
+
+// FindAllFlightByAgencyHandler ...
+func FindAllFlightByAgencyHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
+	w.Header().Set("Content-Type", "application/json")
+	param := params["idAgencia"]
+	id, err := strconv.Atoi(param)
+	itsId := err == nil
+	if !itsId {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	a, _ := serviceAgencia.FindByID(id)
+	if a.ID == 0 {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	json.NewEncoder(w).Encode(serviceAuto.FindAllByAgencia(id))
 }
 
 // UpdateAutoHandler ...

@@ -18,7 +18,7 @@ func StartConn() *sql.DB {
 		panic(err.Error())
 	}
 
-	//createDatabaseIfNotExist(db)
+	createDatabaseIfNotExist(db)
 	createSchemaIfNotExists(db)
 	return db
 }
@@ -45,8 +45,7 @@ func createSchemaIfNotExists(db *sql.DB) {
 		modelo varchar(50) NOT NULL,
 		marca varchar(50) NOT NULL,
 		patente varchar(50) NOT NULL,
-		CONSTRAINT PK_Auto PRIMARY KEY (id_auto),
-		ON DELETE CASCADE
+		CONSTRAINT PK_Auto PRIMARY KEY (id_auto)
 	);`
 
 	// execute a query on the server
