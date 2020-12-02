@@ -17,15 +17,33 @@ var serviceAuto autoService.ServiceAuto
 // Start ...
 func Start(db *sql.DB) {
 	serviceAuto, _ = autoService.New(db)
+	serviceAgencia, _ = agenciaService.New(db)
 }
 
 // SaveAutoHandler ...
 func SaveAutoHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
 	w.Header().Set("Content-Type", "application/json")
-	var a entity.Auto
-	_ = json.NewDecoder(r.Body).Decode(&a)
+	param := params["idAgencia"]
+	id, err := strconv.Atoi(param)
+	itsId := err == nil
 
-	response, _ := serviceAuto.Save(a)
+	if !itsId {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	a, _ := serviceAgencia.FindByID(id)
+
+	if a.ID == 0 {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	var auto entity.Auto
+	_ = json.NewDecoder(r.Body).Decode(&auto)
+
+	auto.IdAgencia = int64(id)
+	response, _ := serviceAuto.Save(auto)
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(response)
 }

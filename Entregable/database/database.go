@@ -55,9 +55,9 @@ func createSchemaIfNotExists(db *sql.DB) {
 		CONSTRAINT PK_Auto PRIMARY KEY (id_auto),
 		FOREIGN KEY FK_AUTO_AGENCIA (id_agencia)
 		REFERENCES agencia (id_agencia)
+		ON DELETE CASCADE
 	);`
 
-	// execute a query on the server
 	_, err := db.Exec(schemaAgencia)
 
 	if err != nil {
