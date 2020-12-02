@@ -18,7 +18,7 @@ func Start() {
 	router.PUT("/agencias/:id", agenciaController.UpdateAgenciaHandler)
 	router.DELETE("/agencias/:id", agenciaController.RemoveAgenciaHandler)
 
-	router.POST("/agencias/:idAgencia/autos", autoController.SaveAutoHandler)
+	router.POST("/agencias/autos", autoController.SaveAutoHandler)
 	router.GET("/agencias/autos/:id", autoController.FindByIDAutoHandler)
 	router.GET("/agencias/autos", autoController.FindAllAutosHandler)
 	router.GET("/agencias/:idAgencia/autos", autoController.FindAllAutosByAgenciaHandler)

@@ -22,9 +22,9 @@ func Start(db *sql.DB) {
 // SaveAutoHandler ...
 func SaveAutoHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
 	w.Header().Set("Content-Type", "application/json")
-
 	var a entity.Auto
 	_ = json.NewDecoder(r.Body).Decode(&a)
+
 	response, _ := serviceAuto.Save(a)
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(response)
@@ -62,8 +62,8 @@ func FindAllAutosByAgenciaHandler(w http.ResponseWriter, r *http.Request, params
 	w.Header().Set("Content-Type", "application/json")
 	param := params["idAgencia"]
 	id, err := strconv.Atoi(param)
-	itsID := err == nil
-	if !itsID {
+	itsId := err == nil
+	if !itsId {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -99,7 +99,7 @@ func UpdateAutoHandler(w http.ResponseWriter, r *http.Request, params map[string
 
 	auto.ID = int64(id)
 
-	response, _ := serviceAuto.Update(a)
+	response, _ := serviceAuto.Update(auto)
 	if response.ID == 0 {
 		w.WriteHeader(http.StatusNotFound)
 	} else {
