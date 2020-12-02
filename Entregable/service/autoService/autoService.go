@@ -13,6 +13,7 @@ type ServiceAuto interface {
 	Save(entity.Auto) (entity.Auto, error)
 	FindByID(int) (entity.Auto, error)
 	FindAll() []entity.Auto
+	FindAllByAgencia(int) []entity.Auto
 	Remove(int) error
 	Update(entity.Auto) (entity.Auto, error)
 }
@@ -28,13 +29,13 @@ func New(db *sql.DB) (ServiceAuto, error) {
 }
 
 func (s service) Save(a entity.Auto) (entity.Auto, error) {
-	query := "INSERT INTO auto(modelo,marca,patente) VALUES (?,?,?)"
+	query := "INSERT INTO auto(modelo,marca,patente,id_agencia) VALUES (?,?,?,?)"
 	prepare, err := s.db.Prepare(query)
 	if err != nil {
 		panic(err.Error())
 	}
 
-	row, err := prepare.Exec(a.Modelo, a.Marca, a.Patente)
+	row, err := prepare.Exec(a.Modelo, a.Marca, a.Patente, a.IdAgencia)
 
 	if err != nil {
 		panic(err.Error())
@@ -58,12 +59,13 @@ func (s service) FindByID(ID int) (entity.Auto, error) {
 	var modelo string
 	var marca string
 	var patente string
-	err2 := rows.Scan(&id, &modelo, &marca, &patente)
+	var idAgencia int64
+	err2 := rows.Scan(&id, &modelo, &marca, &patente, &idAgencia)
 
 	if err2 != nil {
 		return auto, err
 	} else {
-		auto = entity.Auto{ID: id, Modelo: modelo, Marca: marca, Patente: patente}
+		auto = entity.Auto{ID: id, Modelo: modelo, Marca: marca, Patente: patente, IdAgencia: idAgencia}
 
 	}
 
@@ -81,12 +83,13 @@ func (s service) FindAll() []entity.Auto {
 			var modelo string
 			var marca string
 			var patente string
-			err2 := rows.Scan(&id, &modelo, &marca, &patente)
+			var idAgencia int64
+			err2 := rows.Scan(&id, &modelo, &marca, &patente, &idAgencia)
 
 			if err2 != nil {
 				return nil
 			} else {
-				auto := entity.Auto{ID: id, Modelo: modelo, Marca: marca, Patente: patente}
+				auto := entity.Auto{ID: id, Modelo: modelo, Marca: marca, Patente: patente, IdAgencia: idAgencia}
 				autos = append(autos, auto)
 			}
 		}
@@ -113,6 +116,31 @@ func (s service) Remove(ID int) error {
 }
 
 func (s service) Update(a entity.Auto) (entity.Auto, error) {
-	_, err := s.db.Exec("UPDATE Auto SET modelo = ?, marca = ?, patente = ? WHERE id_auto = ?", a.Modelo, a.Marca, a.Patente, a.ID)
+	_, err := s.db.Exec("UPDATE Auto SET modelo = ?, marca = ?, patente = ?, id_agencia = ? WHERE id_auto = ?", a.Modelo, a.Marca, a.Patente, a.IdAgencia, a.ID)
 	return a, err
+}
+
+func (s service) FindAllByAgencia(idAgencia int) []entity.Auto {
+	rows, err := s.db.Query("SELECT auto.* FROM auto JOIN agencia ON(auto.id_agencia = agencia.id_agencia) WHERE agencia.id_agencia = ?", idAgencia)
+	if err != nil {
+		return nil
+	} else {
+		autos := []entity.Auto{}
+		for rows.Next() {
+			var id int64
+			var modelo string
+			var marca string
+			var patente string
+			var idAgencia int64
+			err2 := rows.Scan(&id, &modelo, &marca, &patente, &idAgencia)
+
+			if err2 != nil {
+				panic(err2.Error())
+			} else {
+				auto := entity.Auto{ID: id, Modelo: modelo, Marca: marca, Patente: patente, IdAgencia: idAgencia}
+				autos = append(autos, auto)
+			}
+		}
+		return autos
+	}
 }

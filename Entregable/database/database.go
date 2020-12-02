@@ -40,16 +40,31 @@ func createDatabaseIfNotExist(db *sql.DB) {
 }
 
 func createSchemaIfNotExists(db *sql.DB) {
+	schemaAgencia := `CREATE TABLE IF NOT EXISTS agencia (
+		id_agencia int NOT NULL AUTO_INCREMENT,
+		nombre varchar(50) NOT NULL,
+		CONSTRAINT PK_AGENCIA PRIMARY KEY (id_agencia)
+	);`
+
 	schemaAuto := `CREATE TABLE IF NOT EXISTS auto (
 		id_auto int NOT NULL AUTO_INCREMENT,
 		modelo varchar(50) NOT NULL,
 		marca varchar(50) NOT NULL,
 		patente varchar(50) NOT NULL,
-		CONSTRAINT PK_Auto PRIMARY KEY (id_auto)
+		id_agencia int NOT NULL,
+		CONSTRAINT PK_Auto PRIMARY KEY (id_auto),
+		FOREIGN KEY FK_AUTO_AGENCIA (id_agencia)
+		REFERENCES agencia (id_agencia)
 	);`
 
 	// execute a query on the server
-	var _, err = db.Exec(schemaAuto)
+	_, err := db.Exec(schemaAgencia)
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	_, err = db.Exec(schemaAuto)
 	if err != nil {
 		panic(err.Error())
 	}

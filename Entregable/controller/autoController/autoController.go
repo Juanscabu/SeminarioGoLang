@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/Juanscabu/SeminarioGoLang/Entregable/entity"
+	"github.com/Juanscabu/SeminarioGoLang/Entregable/service/agenciaService"
 	autoService "github.com/Juanscabu/SeminarioGoLang/Entregable/service/autoService"
 )
 
@@ -50,19 +51,19 @@ func FindByIDAutoHandler(w http.ResponseWriter, r *http.Request, params map[stri
 	json.NewEncoder(w).Encode(a)
 }
 
-// FindAllAutoHandler ...
+// FindAllAutosHandler ...
 func FindAllAutosHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(serviceAuto.FindAll())
 }
 
-// FindAllFlightByAgencyHandler ...
-func FindAllFlightByAgencyHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
+// FindAllAutosByAgenciaHandler ...
+func FindAllAutosByAgenciaHandler(w http.ResponseWriter, r *http.Request, params map[string]string) {
 	w.Header().Set("Content-Type", "application/json")
 	param := params["idAgencia"]
 	id, err := strconv.Atoi(param)
-	itsId := err == nil
-	if !itsId {
+	itsID := err == nil
+	if !itsID {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

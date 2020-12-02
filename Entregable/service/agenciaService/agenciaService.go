@@ -8,7 +8,7 @@ import (
 	"github.com/Juanscabu/SeminarioGoLang/Entregable/entity"
 )
 
-// Servicio de agencia
+// ServiceAgencia ...
 type ServiceAgencia interface {
 	Save(entity.Agencia) (entity.Agencia, error)
 	FindByID(int) (entity.Agencia, error)
@@ -27,7 +27,7 @@ func New(db *sql.DB) (ServiceAgencia, error) {
 }
 
 func (s service) Save(a entity.Agencia) (entity.Agencia, error) {
-	query := "INSERT INTO agencia(name) VALUES (?)"
+	query := "INSERT INTO agencia(nombre) VALUES (?)"
 	prepare, err := s.db.Prepare(query)
 	if err != nil {
 		return entity.Agencia{}, err
@@ -45,7 +45,7 @@ func (s service) Save(a entity.Agencia) (entity.Agencia, error) {
 }
 
 func (s service) FindByID(ID int) (entity.Agencia, error) {
-	rows, err := s.db.Query("SELECT * FROM agency WHERE id_agency = ?", ID)
+	rows, err := s.db.Query("SELECT * FROM agencia WHERE id_agencia = ?", ID)
 	if err != nil {
 		return entity.Agencia{}, err
 	}
@@ -102,7 +102,7 @@ func (s service) Remove(ID int) error {
 	if rows > 0 {
 		return nil
 	} else {
-		return errors.New("agency with id=" + strconv.Itoa(ID) + " no fue eliminada")
+		return errors.New("agencia with id=" + strconv.Itoa(ID) + " no fue eliminada")
 	}
 }
 
@@ -120,6 +120,6 @@ func (s service) Update(a entity.Agencia) (entity.Agencia, error) {
 	if rows > 0 {
 		return a, nil
 	} else {
-		return entity.Agencia{}, errors.New("No se puede actualizar esa agencia")
+		return entity.Agencia{}, errors.New("No se puede actualizar la agencia")
 	}
 }

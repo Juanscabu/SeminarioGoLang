@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Juanscabu/SeminarioGoLang/Entregable/controller"
+	"github.com/Juanscabu/SeminarioGoLang/Entregable/controller/autoController"
 	"github.com/Juanscabu/SeminarioGoLang/Entregable/database"
 	"github.com/Juanscabu/SeminarioGoLang/Entregable/router"
 

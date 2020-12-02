@@ -8,6 +8,7 @@ type Agencia struct {
 	Nombre string `json:"nombre"`
 }
 
+// ToJson ...
 func (a Agencia) ToJson() gin.H {
 	return gin.H{
 		"id":     a.ID,
